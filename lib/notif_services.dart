@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
-// import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 class NotificationServices {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -40,19 +40,25 @@ class NotificationServices {
 
 
 
-  Future<void> showScheduleNotification(
-      {required int id,
-      required String title,
-      required String body,
-      required int seconds}) async {
-    await notificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        tz.TZDateTime.from(
-            DateTime.now().add(Duration(seconds: seconds)), tz.local),
-        notificationDetails(),
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
-  }
+  Future<void> showScheduleNotification({
+  required int id,
+  required String title,
+  required String body,
+  required int seconds,
+  
+}) async {
+  tz.initializeTimeZones();
+  await notificationsPlugin.zonedSchedule(
+    id,
+    title,
+    body,
+    tz.TZDateTime.from(
+      DateTime.now().add(Duration(seconds: seconds)),
+      tz.local,
+    ),
+    notificationDetails(),androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,payload: 'payload',
+    uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+  );
+}
 }
